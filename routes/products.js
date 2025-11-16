@@ -1,31 +1,50 @@
 import express from 'express';
+import { Op } from 'sequelize';
 import { Product } from '../models/Product.js';
 
 const router = express.Router();
 
 router.get('/', async (req, res) => {
-  const search = req.query.search;
+  const DEFAULT_LIMIT = 12;
+  const MAX_LIMIT = 50;
+  const searchQuery = typeof req.query.search === 'string' ? req.query.search.trim() : '';
+  const pageParam = Number.parseInt(req.query.page, 10);
+  const limitParam = Number.parseInt(req.query.limit, 10);
+  const page = Number.isNaN(pageParam) || pageParam < 1 ? 1 : pageParam;
+  const limit = Number.isNaN(limitParam) || limitParam < 1
+    ? DEFAULT_LIMIT
+    : Math.min(limitParam, MAX_LIMIT);
+  const offset = (page - 1) * limit;
 
-  let products;
-  if (search) {
-    products = await Product.findAll();
+  const whereClause = searchQuery
+    ? {
+        [Op.or]: [
+          { name: { [Op.like]: `%${searchQuery}%` } },
+          { keywords: { [Op.like]: `%${searchQuery}%` } }
+        ]
+      }
+    : undefined;
 
-    // Filter products by case-insensitive search on name or keywords
-    const lowerCaseSearch = search.toLowerCase();
+  const { rows: products, count: totalItems } = await Product.findAndCountAll({
+    where: whereClause,
+    limit,
+    offset,
+    order: [['createdAt', 'ASC']]
+  });
 
-    products = products.filter(product => {
-      const nameMatch = product.name.toLowerCase().includes(lowerCaseSearch);
+  const totalPages = Math.ceil(totalItems / limit);
 
-      const keywordsMatch = product.keywords.some(keyword => keyword.toLowerCase().includes(lowerCaseSearch));
-
-      return nameMatch || keywordsMatch;
-    });
-
-  } else {
-    products = await Product.findAll();
-  }
-
-  res.json(products);
+  res.json({
+    products,
+    pagination: {
+      page,
+      limit,
+      totalItems,
+      totalPages,
+      hasNextPage: page < totalPages,
+      hasPrevPage: page > 1
+    }
+  });
 });
 
 export default router;

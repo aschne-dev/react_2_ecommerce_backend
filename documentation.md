@@ -25,22 +25,34 @@ Returns a list of products.
 
 **Query Parameters:**
 - `search=...` (optional): Search term to find products by name or keywords
+- `page=number` (optional, default: 1): 1-based page index
+- `limit=number` (optional, default: 12, max: 50): Number of products returned in a page
 
 **Response:**
 ```js
-[
-  {
-    "id": "uuid",
-    "image": "string",
-    "name": "string",
-    "rating": {
-      "stars": "number",
-      "count": "number"
-    },
-    "priceCents": "number",
-    "keywords": ["string"]
+{
+  "products": [
+    {
+      "id": "uuid",
+      "image": "string",
+      "name": "string",
+      "rating": {
+        "stars": "number",
+        "count": "number"
+      },
+      "priceCents": "number",
+      "keywords": ["string"]
+    }
+  ],
+  "pagination": {
+    "page": "number",
+    "limit": "number",
+    "totalItems": "number",
+    "totalPages": "number",
+    "hasNextPage": "boolean",
+    "hasPrevPage": "boolean"
   }
-]
+}
 ```
 
 ## GET /api/delivery-options
