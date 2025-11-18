@@ -1,17 +1,42 @@
-## Intro to the Project
-This is the backend for the [ecommerce-project](https://github.com/SuperSimpleDev/ecommerce-project).
-- 95% of the code was generated with AI.
+## Backend E-commerce
+Ce dépôt contient l'API Express utilisée par le projet front-end [react_2_ecommerce](https://github.com/aschne-dev/react_2_ecommerce). Elle expose toutes les routes nécessaires pour gérer produits, panier, commandes et résumé de paiement, tout en servant les assets statiques compilés dans `dist/`.
 
-## Video Tutorials
-**Part 1 - Create the Backend:** https://youtu.be/vBprybSmJs8
+### Pile technique
+- Node.js 22+, Express 4 et CORS pour l'API REST.
+- Sequelize configuré en mode SQLite (fichier `database.sqlite`) avec modèles pour produits, options de livraison, panier et commandes.
+- Données par défaut dans `defaultData/` chargées automatiquement lors du premier démarrage.
 
-## Set up this backend
-1. Make sure you have NodeJS installed (version 22+). If not, [click here to install](https://nodejs.org/).
-2. Download this code by clicking the green `Code` button (in the top-right) > Click `Download Zip`.
-3. Unzip the code. On Windows, right-click the zip file > `Extract All`. On Mac, double-click the zip file.
-4. Open this code in VSCode.
-5. At the top menu of VSCode, click `Terminal` > `New Terminal`.
-6. In the Terminal, run `npm install`, and run `npm run dev`.
+### Prérequis
+- Node.js >= 22 et npm (ou pnpm/yarn équivalent).
+- Optionnel : `nodemon` installé globalement si vous voulez un rechargement automatique (sinon utilisez le script fourni).
 
-## Troubleshooting
-If you run into issues, see the [troubleshooting steps](troubleshooting.md).
+### Installation et exécution
+1. Clonez ou téléchargez ce dépôt.
+2. Installez les dépendances : `npm install`.
+3. Lancez le serveur :
+   - `npm run dev` démarre l'API avec `nodemon` sur `http://localhost:3000`.
+   - `npm start` démarre l'API en mode production (Node simple).
+4. Le serveur initialise la base s'il s'agit d'un premier démarrage et sert également `dist/index.html` pour tout chemin non-API.
+
+### Scripts disponibles
+- `npm run dev` : mode développement avec rechargement.
+- `npm start` : démarre l'API (utile pour déploiement).
+- `npm run zip` : crée une archive du projet (utilisé pour partager l'exercice).
+- `npm test` : placeholder (aucun test automatisé pour l'instant).
+
+### Documentation API
+Toutes les routes détaillées (produits, panier, commandes, résumé de paiement, réinitialisation) se trouvent dans `documentation.md`. Vous y trouverez :
+- Endpoints disponibles, paramètres (`search`, `page`, `expand`, etc.).
+- Formats des requêtes/ réponses JSON.
+- Comportement spécifique comme la remise à zéro du panier après une commande ou la réinitialisation via `POST /api/reset`.
+
+### Dépannage
+Des conseils supplémentaires sont regroupés dans `troubleshooting.md` (copier/coller des erreurs dans l'IA, récupérer une version saine du dépôt, etc.). En cas d'erreurs de port ou de dépendances, assurez-vous qu'aucun autre service n'occupe le port 3000 et que la base `database.sqlite` est accessible en écriture.
+
+### Ressources utiles
+- Tutoriel vidéo (Partie 1) : https://youtu.be/vBprybSmJs8
+- Front-end compagnon : https://github.com/aschne-dev/react_2_ecommerce
+- Documentation interne : `documentation.md`
+- Guide de dépannage : `troubleshooting.md`
+
+Bon développement !
